@@ -40,6 +40,7 @@ jobs:
     plan:
       - get: source-repo
         trigger: true
+        passed: [ unit-test ]
       - task: unit
         config:
           platform: linux
