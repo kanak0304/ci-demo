@@ -2,10 +2,16 @@
 resources:
   - name: source-repo
     type: git
+    source: {uri: 'https://github.com/making/ci-demo', branch: master}
+  - name: cf
+    type: cf
     source:
-      uri: https://github.com/making/ci-demo
-      branch: master
-
+      api: {{cf-api}}
+      username: {{cf-username}}
+      password: {{cf-password}}
+      organization: {{cf-org}}
+      space: {{cf-space}}
+      skip_cert_check: true
 jobs:
   - name: unit-test
     serial: true
@@ -18,9 +24,7 @@ jobs:
           platform: linux
           image_resource:
             type: docker-image
-            source:
-              repository: java
-              tag: 8-alpine
+            source: {repository: java, tag: 8-alpine}
           inputs:
           - name: source-repo
           run:
@@ -30,3 +34,31 @@ jobs:
               - |
                 cd source-repo
                 ./mvnw test
+  - name: deploy-to-cf
+    serial: true
+    public: true
+    plan:
+      - get: source-repo
+        trigger: true
+      - task: unit
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source: {repository: java, tag: 8-alpine}
+          inputs:
+          - name: source-repo
+          outputs:
+          - name: output
+          run:
+            path: sh
+            args:
+              - -c
+              - |
+                cd source-repo
+                ./mvnw package
+                cp target/*.jar ../output
+      - put: cf
+        params:
+          path: output/demo.jar
+          current_app_name: concourse-ci-demo
