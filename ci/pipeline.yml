@@ -11,7 +11,7 @@ jobs:
     serial: true
     public: true
     plan:
-      - get: repo
+      - get: source-repo
         trigger: true
       - task: unit
         config:
@@ -22,7 +22,7 @@ jobs:
               repository: java
               tag: 8-alpine
           inputs:
-          - name: souorce-repo
+          - name: source-repo
           run:
             path: sh
             args:
