@@ -57,7 +57,7 @@ jobs:
               - -c
               - |
                 cd source-repo
-                ./mvnw package
+                ./mvnw package -Dmaven.test.skip=true
                 cp target/*.jar ../output
       - put: cf
         params:
