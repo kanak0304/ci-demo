@@ -58,8 +58,9 @@ jobs:
               - |
                 cd source-repo
                 ./mvnw package -Dmaven.test.skip=true
-                cp target/*.jar ../output
+                cp target/*.jar ../output/demo.jar
       - put: cf
         params:
+          manifest: source-repo/manifest.yml
           path: output/demo.jar
           current_app_name: concourse-ci-demo
