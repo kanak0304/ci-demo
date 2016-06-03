@@ -2,7 +2,7 @@
 resources:
   - name: source-repo
     type: git
-    source: {uri: 'https://github.com/making/ci-demo', branch: master}
+    source: {uri: 'https://github.com/kanak0304/ci-demo', branch: master}
   - name: cf
     type: cf
     source:
@@ -12,6 +12,7 @@ resources:
       organization: {{cf-org}}
       space: {{cf-space}}
       skip_cert_check: true
+    check_every: 10s # for demo
 jobs:
   - name: unit-test
     serial: true
