@@ -22,7 +22,7 @@ public class CiDemoApplicationTests {
 
     @Test
     public void contextLoads() {
-        assertThat(restTemplate.getForObject("http://localhost:" + port, String.class), is("Hello World V3!"));
+        assertThat(restTemplate.getForObject("http://localhost:" + port, String.class), is("Hello World V1!"));
     }
 
 }
