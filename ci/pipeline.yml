@@ -51,7 +51,7 @@ jobs:
           trigger: true
           passed: [ unit-test ]
         - get: m2
-      - task: unit
+      - task: package
         config:
           platform: linux
           image_resource:

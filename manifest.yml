@@ -2,4 +2,4 @@
 applications:
   - name: concourse-ci-demo
     path: target/demo.jar
-    buildpack: java_buildpack
+    buildpack: https://github.com/cloudfoundry/java-buildpack.git
