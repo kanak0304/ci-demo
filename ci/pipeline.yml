@@ -13,13 +13,19 @@ resources:
       space: {{cf-space}}
       skip_cert_check: true
     check_every: 10s # for demo
+  - name: m2
+    type: docker-image
+    source:
+      repository: making/m2
 jobs:
   - name: unit-test
     serial: true
     public: true
     plan:
-      - get: source-repo
-        trigger: true
+      - aggregate:
+        - get: source-repo
+          trigger: true
+        - get: m2
       - task: unit
         config:
           platform: linux
@@ -28,20 +34,23 @@ jobs:
             source: {repository: java, tag: 8-alpine}
           inputs:
           - name: source-repo
+          - name: m2
           run:
             path: sh
             args:
               - -c
               - |
                 cd source-repo
-                ./mvnw test
+                ./mvnw test -Dmaven.repo.local=../m2/rootfs/opt/m2
   - name: deploy-to-cf
     serial: true
     public: true
     plan:
-      - get: source-repo
-        trigger: true
-        passed: [ unit-test ]
+      - aggregate:
+        - get: source-repo
+          trigger: true
+          passed: [ unit-test ]
+        - get: m2
       - task: unit
         config:
           platform: linux
@@ -50,6 +59,7 @@ jobs:
             source: {repository: java, tag: 8-alpine}
           inputs:
           - name: source-repo
+          - name: m2
           outputs:
           - name: output
           run:
@@ -58,7 +68,7 @@ jobs:
               - -c
               - |
                 cd source-repo
-                ./mvnw package -Dmaven.test.skip=true
+                ./mvnw package -Dmaven.test.skip=true -Dmaven.repo.local=../m2/rootfs/opt/m2
                 cp target/*.jar ../output/demo.jar
       - put: cf
         params:
