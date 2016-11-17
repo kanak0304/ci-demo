@@ -1,6 +1,6 @@
 ---
 applications:
-  - name: concourse-ci-demo
+  - name: concourse-ci-demo-1117
     path: target/demo.jar
     buildpack: https://github.com/cloudfoundry/java-buildpack.git
-    random-route: true
+    #random-route: true
