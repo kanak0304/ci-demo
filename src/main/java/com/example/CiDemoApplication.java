@@ -11,7 +11,7 @@ public class CiDemoApplication {
 
     @RequestMapping("/")
     String hello() {
-        return "Hello World 1118!";
+        return "Hello World 1206!";
     }
 
     public static void main(String[] args) {
